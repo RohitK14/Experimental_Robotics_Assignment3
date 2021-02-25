@@ -22,7 +22,7 @@ The aim of this assignment is to implement four states of the robot which are No
 ## <a name="SA-SMD"></a>The State Machine Diagram
 For implementing the concept, we can see the finite state machine diagram in the image below. Here, there are three states of the robot. The transitions are mentioned in the image. As, the find algorithm could not be implemented successfully, it is not shown in the image.
 
-![Assignment1_ExperimentalRobotics](images/state_machine.png)
+![Experimental_Robotics_Assignment3](exp_assignment3-main/images/state_machine.png)
 
 * Normal - This state has two possible transitions "go_sleep" and "start_play"
 * Play - This state has one outcome where it goes back to the normal state with transition "go_to_normal" and the other state Find when we don't have the location of the room
