@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+    """@package exp_assignment3
+    \file state_behavior.py
+    \brief This file contains the behaviour of a of the finite state machine.
+    \author Rohit Kumar
+    \date 25/02/2021
+
+
+
+    \param [in] home_x
+    \param [in] home_y
+    \param [in] tireness_level
+
+    Returns:
+        [Finite state diagram]: [Differnet states can be visualised with the help of smach_viewer]
+    """
+
+
+
+
+
 # To run this file go to the src folder and type
 # $ chmod +x state_behavior.py
 
@@ -40,7 +60,10 @@ import roslib
 from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Float64
 
-
+    """Parameters:
+        [home_x]: [The launch file describes the home position of the robot. ]
+        [tireness_level]: [It tells us the number of times a task can be performed before the fatigue.]
+    """
 home_fixed = Point()
 home_fixed.x = rospy.get_param('home_x', 0)
 home_fixed.y = rospy.get_param('home_y', 0)
@@ -51,11 +74,21 @@ flag_state = 1
 
 
 class Normal(smach.State):
-    ##
-    #   \brief __init__ initialises the Normal state in the smach_state
-    #   \param outcomes are the possible transitions which are either it can go to normal ot play state
-    #   \param input_keys These are possible input of the state
-    #   \param output_keys These are possible outputs of the state.
+    """
+    \brief __init__ initialises the Normal state in the smach_state
+       \param outcomes are the possible transitions which are either it can go to normal ot play state
+       \param input_keys These are possible input of the state
+       \param output_keys These are possible outputs of the state.
+
+    Subscribers:
+    	sub_human: subscriber (std_msgs.String) to /command
+		subscribe to get the command from human client to enter the PLAY state
+    Actions:
+    	client: Client for action /move_base
+		The client calls the action sever to move the robot to the specified target on the plane.
+		goal: geometry_msgs.PoseStamped
+		result: geometry_msgs.Pose
+    """
     def __init__(self):
         smach.State.__init__(self,
                              outcomes=['go_sleep', 'start_play'],
@@ -76,11 +109,17 @@ class Normal(smach.State):
         self.human = data.data
 
     def execute(self, userdata):
-        ##
-        #   \brief In this execute() function, the robot randomly walks in the environment until it reaches the tired_level
-        #   The lograndintic used here is that if we receive a command play in the middle, it reaches the
-        #   last coordinate and that is published in the rostopic /moveToPose and shifts to Play state.
-        #   Otherwise the robot goes to "Sleep" state after it gets tired
+        """
+        \brief In this execute() function, the robot randomly walks in the environment until it reaches the tired_level
+           The logarithm used here is that if we receive a command play in the middle, it reaches the
+           last coordinate and then shifts to the Play state.
+         Otherwise the robot goes to "Sleep" state after it gets tired with respect to tireness_level
+         The goals are cancelled as soon as the play command is received.
+         Returns:
+            Sleep state - This is returned after tiring
+            Play state - This is returned after the command is received.
+        """
+
         userdata.normal_tired_counter_out = 0
         self.counter = 1
         while not rospy.is_shutdown():
@@ -114,11 +153,18 @@ class Normal(smach.State):
 
 # define state Sleep
 class Sleep(smach.State):
-    ##
-    #   \brief __init__ initialises the Sleep state in the smach_state
-    #   \param outcomes are the possible transition is it can to normal state by wake_up transition
-    #   \param input_keys These are possible input of the state
-    #   \param output_keys These are possible outputs of the state.
+    """\brief __init__ initialises the Sleep state in the smach_state
+       \param outcomes are the possible transition is it can to normal state by wake_up transition
+       \param input_keys These are possible input of the state
+       \param output_keys These are possible outputs of the state.
+
+    Args:
+        smach ([state]): The state of the finite machine is taken
+
+    Action server: 
+            client: Action server to mobve the base to specified coordinates in the world.
+    """
+       
     def __init__(self):
         smach.State.__init__(self,
                              outcomes=['wake_up'])
@@ -126,12 +172,16 @@ class Sleep(smach.State):
             '/move_base', MoveBaseAction)
 
     def execute(self, userdata):
-        ##
-        #   \brief In this execute() function, the robot goes to predefined home_fixed position
-        #   The position is published in the topic /moveToPose
-        #   The logic used here is that if we receive a command play in the middle, it reaches the
-        #   last coordinate and that is published in the rostopic /moveToPose and shifts to Play state.
-        #   Otherwise the robot goes to "Sleep" state after it gets tired
+        """\brief In this execute() function, the robot goes to predefined home_fixed position
+           The position is published in the topic /moveToPose
+           The logic used here is that if we receive a command play in the middle, it reaches the
+           last coordinate and that is published in the rostopic /moveToPose and shifts to Play state.
+           Otherwise the robot goes to "Sleep" state after it gets tired
+
+        Returns:
+            [wake_up]: transition state 
+        """
+           
 
         rospy.loginfo('Executing state Sleep')
         self.client.wait_for_server()
@@ -151,11 +201,20 @@ class Sleep(smach.State):
 
 # define state Play
 class Play(smach.State):
-    ##
-    #   \brief __init__ initializes the Play state with the outcome go_to_normal.
-    #   \param  outcomes lists the possible transitions. From play we can go to normal state.
-    #   \param input_keys It is the possible input of the state
-    #   \pram output keys It is the possible output of the state
+    """   \brief __init__ initializes the Play state with the outcome go_to_normal.
+       \param  outcomes lists the possible transitions. From play we can go to normal state.
+       \param input_keys It is the possible input of the state
+       \pram output keys It is the possible output of the state
+
+    The human is considered to be stationary at point(-5,8). The robot comes to the human and then
+    follows his commands and returns back to the human.
+    
+    Args:
+        smach ([state]): This state is responsible for the Play behavior of the robot
+
+    Returns:
+        [go_to_normal]: when the seach is over returns back to normal state.
+    """
     def __init__(self):
         smach.State.__init__(self,
                              outcomes=['go_to_normal'])
@@ -167,13 +226,18 @@ class Play(smach.State):
         self.human = Point(x=-5, y=8)
 
     def execute(self, userdata):
-        ##
-        #   In this execute(), we implement play behavior.
-        #   A random position is generated for a person. The robot goes to the person, waits for the gesture and
-        #   and goes to gesture position.
-        #   the robot goes and comes back to the gesture position and waits for another gesture position until
-        #   it gets tired.
-        #   At last the robot goes to Normal position.
+        """
+           In this execute(), we implement play behavior.
+          A fixed position is set for a person. The robot goes to the person, waits for the gesture and
+           and goes to gesture position.
+           the robot goes and comes back to the gesture position and waits for another gesture position until
+           it gets tired.
+           At last the robot goes to Normal position.
+
+        Returns:
+            [go_to_normal]: transition state to switch back to Normal state
+                    """
+        
 
         rospy.loginfo('Executing state Play')
         goal = MoveBaseGoal()
@@ -216,6 +280,8 @@ def main():
     sm.userdata.tireness = 0
     sm.userdata.person = Point()
     # Open the container
+    """Generating the finite state machine with NORMAL, SLEEP and PLAY state.
+    """
     with sm:
         # Add states to the container
         smach.StateMachine.add('NORMAL', Normal(),

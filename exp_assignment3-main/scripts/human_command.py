@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-
+""" 
+@package exp_assignment3
+    \file human_command.py
+    \brief This file contains the behaviour of a human to interact with the robot.
+    \author Rohit Kumar
+    \date 25/02/2021
+    """
 # import ros stuff
 import rospy
 from sensor_msgs.msg import LaserScan
@@ -17,8 +23,11 @@ import random
 
 
 def time_counter(seconds):
-	""" Function to wait the specified seconds
-	"""
+    """A time_counter function to wait for the specfied number of time.
+
+    Args:
+        seconds ([integer]): [This argument is used to calculate the time passed when comapared to current time]
+    """
 	start_time = time.time()
 	my_time = 0
 	while (my_time < seconds):
@@ -30,12 +39,22 @@ arrived = False
 
 
 def Callback(data):
+    """This is a callback to receive data from the ros topic /waitForRobot
+    """
 	global arrived
 	arrived = data.data
 
 
 def main():
+    """The main function tries to emulate the human client by saying the command play.
+    The command play is sent after random time. 
 
+    Publishers:
+            pub: /command std_msgs.String [It send the command to switch to play state]
+    Subscribers:
+            sub: /waitForRobot std_msgs.Bool [It checks whether the robot has arrived to the human]
+
+    """
     rospy.init_node('human_command')
 
     pub = rospy.Publisher("/command", String, queue_size=10)

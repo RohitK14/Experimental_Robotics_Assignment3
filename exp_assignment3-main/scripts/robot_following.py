@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+
+"""@package exp_assignment3
+    \file robot_following.py
+    \brief This file contains the camera behaviour of the robot.
+    \author Rohit Kumar
+    \date 25/02/2021
+
+    """
 # Python libs
 import sys
 import time
@@ -32,7 +40,17 @@ from geometry_msgs.msg import Twist, Point, Pose
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import CompressedImage
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-
+    """Parameters
+    Global:
+    The positions of the six spaces in the world is initialised to zero.
+    The places are :
+            Kitchen: yellow
+            Closet: red
+            Living Room : green
+            Entrance: blue
+            Bathroom: magenta
+            Bedroom: black
+    """
 global rooms
 kitchen = Point(x=0, y=0)
 closet = Point(x=0, y=0)
@@ -44,7 +62,7 @@ rooms = [kitchen, closet, livingRoom, entrance, bathroom, bedroom]
 
 global colors
 colors = ['yellow', 'red', 'green', 'blue', 'magenta', 'black']
-
+#The lower and upper limits of the colors to be detected
 blue_low = (100, 50, 50)
 blue_high = (130, 255, 255)
 red_low = (0, 50, 50)
@@ -75,8 +93,20 @@ color_Higher = [
 
 VERBOSE = False
 
-
 class image_feature:
+    """
+    Publishers:
+		image_pub: It publishes (sensor_msgs.CompressedImage) to /robot/output/image_raw/compressed
+		vel_pub: publishes (grometry_msgs.Twist) to /robot/cmd_vel
+		pubColor : publishes (std_msgs.String) to /color_detect
+		pubLocation: published (geometry_msgs.Point) to /location
+	Subscribers:
+		sub_color: subscribes (std_msgs.String) to /goTocmd
+		sub_odom: subscribes (nav_msgs.Odom) to /odom
+		subscriber: subscribes to (sensor_msgs.CompressedImage) /robot/camera1/image_raw/compressed   
+    Action server:
+        client: Action client /move_base
+    """
 
     def __init__(self):
         '''Initialize ros publisher, ros subscriber'''
@@ -107,9 +137,20 @@ class image_feature:
         self.position = Point()
 
     def odoCallback(self, data):
+        """This is a callback to note the current position and pose of the robot for noting down the 
+        marks of the different places.
+
+        Args:
+            data : the data recorded in the /odom type
+        """
         self.position = data.pose.pose.position
 
     def colCallback(self, data):
+        """This is callback for the subscriber sub_color
+
+        Args:
+            data : String type of data sent by the human client to go to.
+        """
         if data.data == 'entrance':
             self.color = 'blue'
         if data.data == 'closet':
@@ -137,7 +178,11 @@ class image_feature:
         hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
         for i in range(0, 6):
+        """It checks for every color that represents the different places.
 
+        Args:
+            6 ([string]): [It defines the colors that belong to the rooms in the world environment]
+        """
             mask = cv2.inRange(hsv, color_Lower[i], color_Higher[i])
             mask = cv2.erode(mask, None, iterations=2)
             mask = cv2.dilate(mask, None, iterations=2)
@@ -148,6 +193,8 @@ class image_feature:
             center = None
             # only proceed if at least one contour was found
             if len(cnts) > 0 and rooms[i].x == 0 and rooms[i].y == 0:
+        """Checks if the location is already searched. If it is noted already, doesn't enter the loop
+        """
                 # find the largest contour in the mask, then use
                 # it to compute the minimum enclosing circle and
                 # centroid
@@ -170,9 +217,16 @@ class image_feature:
                     vel.angular.z = 0.002*(center[0]-400)
                     vel.linear.x = -0.01 * (radius - 200)
                     self.vel_pub.publish(vel)
+
                     if(abs(radius - 100) < 2):
+        """Checks if the robot is close to the ball. The robot stops and the location is noted fot eh respective room 
+        with the help of the index.
+        """
                         print('Close to the ball')
                         rooms[i] = self.position
+                        vel.angular.z=0
+                        vel.linear.x=0
+                        self.vel_pub.publish(vel)
                         # self.pubLocation.publish(self.position)
                         # self.pubColor.publish(self.color)
 
