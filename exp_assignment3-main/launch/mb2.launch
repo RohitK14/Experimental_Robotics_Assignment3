@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<launch>
+	<include file="$(find exp_assignment3)/launch/simulation.launch"></include>
+	<include file="$(find exp_assignment3)/launch/gmapping.launch"></include>
+	
+    <arg name="des_x" default= "-5"/>
+    <arg name="des_y" default= "8"/>
+    <param name="des_pos_x" value="$(arg des_x)" />
+    <param name="des_pos_y" value="$(arg des_y)" />
+    
+    <include file="$(find exp_assignment3)/launch/move_base.launch"></include>
+
+    <!--
+    <include file="$(find explore_lite)/launch/explore.launch"></include> 
+	
+-->
+
+    <node name="robot_client_server" pkg="exp_assignment3" type="robot_following.py" output="screen" />    
+    <node name="state_machine" pkg="exp_assignment3" type="state_behavior.py" output="screen" />
+    <node name="human_client" pkg="exp_assignment3" type="human_command.py" output="screen" />
+
+
+    <node name="state_view" pkg="smach_viewer" type="smach_viewer.py" output="screen" />
+</launch>
