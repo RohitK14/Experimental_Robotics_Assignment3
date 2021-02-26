@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """ 
-@package exp_assignment3
+    \package exp_assignment3
     \file human_command.py
     \brief This file contains the behaviour of a human to interact with the robot.
     \author Rohit Kumar
@@ -28,10 +28,10 @@ def time_counter(seconds):
     Args:
         seconds ([integer]): [This argument is used to calculate the time passed when comapared to current time]
     """
-	start_time = time.time()
-	my_time = 0
-	while (my_time < seconds):
-		my_time = time.time() - start_time
+    start_time = time.time()
+    my_time = 0
+    while (my_time < seconds):
+        my_time = time.time() - start_time
 
 
 global arrived
@@ -41,8 +41,8 @@ arrived = False
 def Callback(data):
     """This is a callback to receive data from the ros topic /waitForRobot
     """
-	global arrived
-	arrived = data.data
+    global arrived
+    arrived = data.data
 
 
 def main():

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-"""@package exp_assignment3
+""" \package exp_assignment3
     \file robot_following.py
     \brief This file contains the camera behaviour of the robot.
     \author Rohit Kumar
@@ -40,17 +40,17 @@ from geometry_msgs.msg import Twist, Point, Pose
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import CompressedImage
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-    """Parameters
-    Global:
-    The positions of the six spaces in the world is initialised to zero.
-    The places are :
-            Kitchen: yellow
-            Closet: red
-            Living Room : green
-            Entrance: blue
-            Bathroom: magenta
-            Bedroom: black
-    """
+"""Parameters
+Global:
+The positions of the six spaces in the world is initialised to zero.
+The places are :
+        Kitchen: yellow
+        Closet: red
+        Living Room : green
+        Entrance: blue
+        Bathroom: magenta
+        Bedroom: black
+"""
 global rooms
 kitchen = Point(x=0, y=0)
 closet = Point(x=0, y=0)
@@ -176,13 +176,12 @@ class image_feature:
         image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # OpenCV >= 3.0:
         blurred = cv2.GaussianBlur(image_np, (11, 11), 0)
         hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
-
-        for i in range(0, 6):
         """It checks for every color that represents the different places.
 
         Args:
             6 ([string]): [It defines the colors that belong to the rooms in the world environment]
         """
+        for i in range(0, 6):
             mask = cv2.inRange(hsv, color_Lower[i], color_Higher[i])
             mask = cv2.erode(mask, None, iterations=2)
             mask = cv2.dilate(mask, None, iterations=2)
@@ -193,12 +192,12 @@ class image_feature:
             center = None
             # only proceed if at least one contour was found
             if len(cnts) > 0 and rooms[i].x == 0 and rooms[i].y == 0:
-        """Checks if the location is already searched. If it is noted already, doesn't enter the loop
-        """
                 # find the largest contour in the mask, then use
                 # it to compute the minimum enclosing circle and
                 # centroid
-
+                """
+                Checks if the location is already searched. If it is noted already, doesn't enter the loop
+                """
                 self.client.cancel_all_goals()
 
                 c = max(cnts, key=cv2.contourArea)
@@ -219,9 +218,9 @@ class image_feature:
                     self.vel_pub.publish(vel)
 
                     if(abs(radius - 100) < 2):
-        """Checks if the robot is close to the ball. The robot stops and the location is noted fot eh respective room 
-        with the help of the index.
-        """
+                        """Checks if the robot is close to the ball. The robot stops and the location is noted fot eh respective room 
+                        with the help of the index.
+                        """
                         print('Close to the ball')
                         rooms[i] = self.position
                         vel.angular.z=0

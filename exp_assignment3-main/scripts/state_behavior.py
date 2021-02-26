@@ -1,11 +1,13 @@
 #!/usr/bin/env python
-    """@package exp_assignment3
+# # To run this file go to the src folder and type
+# $ chmod +x state_behavior.py
+
+"""
+    \package exp_assignment3
     \file state_behavior.py
     \brief This file contains the behaviour of a of the finite state machine.
     \author Rohit Kumar
     \date 25/02/2021
-
-
 
     \param [in] home_x
     \param [in] home_y
@@ -14,14 +16,6 @@
     Returns:
         [Finite state diagram]: [Differnet states can be visualised with the help of smach_viewer]
     """
-
-
-
-
-
-# To run this file go to the src folder and type
-# $ chmod +x state_behavior.py
-
 import rospy
 import smach
 import smach_ros
@@ -59,11 +53,11 @@ import roslib
 # Ros Messages
 from sensor_msgs.msg import CompressedImage
 from std_msgs.msg import Float64
-
-    """Parameters:
-        [home_x]: [The launch file describes the home position of the robot. ]
-        [tireness_level]: [It tells us the number of times a task can be performed before the fatigue.]
-    """
+"""
+Parameters:
+    [home_x]: [The launch file describes the home position of the robot. ]
+    [tireness_level]: [It tells us the number of times a task can be performed before the fatigue.]
+"""
 home_fixed = Point()
 home_fixed.x = rospy.get_param('home_x', 0)
 home_fixed.y = rospy.get_param('home_y', 0)
