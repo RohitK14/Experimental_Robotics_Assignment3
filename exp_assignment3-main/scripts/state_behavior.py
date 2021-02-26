@@ -149,8 +149,6 @@ class Normal(smach.State):
 class Sleep(smach.State):
     """\brief __init__ initialises the Sleep state in the smach_state
        \param outcomes are the possible transition is it can to normal state by wake_up transition
-       \param input_keys These are possible input of the state
-       \param output_keys These are possible outputs of the state.
 
     Args:
         smach ([state]): The state of the finite machine is taken
@@ -167,10 +165,8 @@ class Sleep(smach.State):
 
     def execute(self, userdata):
         """\brief In this execute() function, the robot goes to predefined home_fixed position
-           The position is published in the topic /moveToPose
-           The logic used here is that if we receive a command play in the middle, it reaches the
-           last coordinate and that is published in the rostopic /moveToPose and shifts to Play state.
-           Otherwise the robot goes to "Sleep" state after it gets tired
+           
+           The robot goes to "Sleep" state after it gets tired. It stays for 10s and then shifts back to Normal state.
 
         Returns:
             [wake_up]: transition state 
@@ -197,8 +193,6 @@ class Sleep(smach.State):
 class Play(smach.State):
     """   \brief __init__ initializes the Play state with the outcome go_to_normal.
        \param  outcomes lists the possible transitions. From play we can go to normal state.
-       \param input_keys It is the possible input of the state
-       \pram output keys It is the possible output of the state
 
     The human is considered to be stationary at point(-5,8). The robot comes to the human and then
     follows his commands and returns back to the human.

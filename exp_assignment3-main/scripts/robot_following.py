@@ -218,7 +218,7 @@ class image_feature:
                     self.vel_pub.publish(vel)
 
                     if(abs(radius - 100) < 2):
-                        """Checks if the robot is close to the ball. The robot stops and the location is noted fot eh respective room 
+                        """Checks if the robot is close to the ball. The robot stops and the location is noted for the respective room 
                         with the help of the index.
                         """
                         print('Close to the ball')
