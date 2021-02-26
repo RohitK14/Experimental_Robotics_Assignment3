@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>human_command module &mdash; Experimental Robotics Assignment 3 0.1 documentation</title>
+    <title>scripts &mdash; Experimental Robotics Assignment 3 0.1 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -36,43 +36,17 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="human-command-module">
-<h1>human_command module<a class="headerlink" href="#human-command-module" title="Permalink to this headline">¶</a></h1>
-<dl class="docutils">
-<dt>ile human_command.py</dt>
-<dd>rief This file contains the behaviour of a human to interact with the robot.
-uthor Rohit Kumar
-date 25/02/2021</dd>
-</dl>
-<dl class="function">
-<dt id="human_command.Callback">
-<code class="descclassname">human_command.</code><code class="descname">Callback</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#human_command.Callback" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a callback to receive data from the ros topic /waitForRobot</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="human_command.main">
-<code class="descclassname">human_command.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#human_command.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>The main function tries to emulate the human client by saying the command play.
-The command play is sent after random time.</p>
-<dl class="docutils">
-<dt>Publishers:</dt>
-<dd>pub: /command std_msgs.String [It send the command to switch to play state]</dd>
-<dt>Subscribers:</dt>
-<dd>sub: /waitForRobot std_msgs.Bool [It checks whether the robot has arrived to the human]</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="human_command.time_counter">
-<code class="descclassname">human_command.</code><code class="descname">time_counter</code><span class="sig-paren">(</span><em>seconds</em><span class="sig-paren">)</span><a class="headerlink" href="#human_command.time_counter" title="Permalink to this definition">¶</a></dt>
-<dd><p>A time_counter function to wait for the specfied number of time.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>seconds ([integer]): [This argument is used to calculate the time passed when comapared to current time]</dd>
-</dl>
-</dd></dl>
-
+  <div class="section" id="scripts">
+<h1>scripts<a class="headerlink" href="#scripts" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="go_to_point_service_m.html">go_to_point_service_m module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="human_command.html">human_command module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robot_following.html">robot_following module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="state_behavior.html">state_behavior module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_interface.html">user_interface module</a></li>
+</ul>
+</div>
 </div>
 
 
@@ -90,7 +64,7 @@ The command play is sent after random time.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/source/human_command.txt"
+      <li><a href="../_sources/source/modules.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -119,7 +93,7 @@ The command play is sent after random time.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
       
       |
-      <a href="../_sources/source/human_command.txt"
+      <a href="../_sources/source/modules.txt"
           rel="nofollow">Page source</a>
     </div>
 
