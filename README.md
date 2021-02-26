@@ -42,7 +42,7 @@ This package has some messages which are described in the following.
 * nav_msgs Odom: It is required for odometry data and taking the position of the robot while going near the ball.
 
 ### <a name="MSG-P"></a>The Parameters
-The following parameters are launched from the launch file. These can be altered using the launch file in robot_motion/launch/behaviors.launch thus allowing flexibility.
+The following parameters are launched from the launch file. These can be altered using the launch file in exp_assignment3-main/launch/simulation.launch thus allowing flexibility.
 * home_x and home_y: These define the SLEEP coordinates of the behavior. The robot goes to this position when it is tired.
 * tireness_level: This defines the threshold of the robot when it is under any state. 
 
